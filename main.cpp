@@ -1,6 +1,3 @@
-//
-// Created by Dāvis Krasts on 27.03.2023.
-//
 
 /*Izveidot divas programmas valodā C++, kas strādā ar vērtību virkni divos dažādos veidos:
   1) to realizējot kā vienvirziena saistīto sarakstu, izmantojot dinamiskas datu struktūras,
@@ -12,6 +9,8 @@ cita starpā parādot gan sākotnējās, gan rezultējošās vērtības.
 
 G18. Uzrakstīt funkciju, kas izmet no saraksta tos elementus, kuriem vērtība vienāda ar to kārtas numuru.*/
 
+//Autors: Dāvis Krasts, dk22052
+// Izveidots: 05.04.2023
 #include <iostream>
 using namespace std;
 
@@ -21,32 +20,30 @@ struct elem{
 };
 
 void pievienot(elem* &first, elem* &last, int el){
-    elem* p = new elem;   /// izveido mezglu
-    p->num = el;     /// aizpilda ar nolasīto vērtību
-    p->next = NULL; /// norāde uz nākošo - tukša!
+    elem* p = new elem;
+    p->num = el;
+    p->next = NULL;
     if (first == NULL){
-/// ja saraksts tukšs
-/// gan pirmais, gan pēdējais norāda uz jauno elementu
         first = last = p;
     }
-    else{
-/// ja saraksts nav tukšs
-/// pieliek galā beidzamajam mezglam
+    else{ // ja saraksts nav tukšs
         last->next = p;
-/// un jaunais kļūst par beidzamo
         last = p;
     }
 }
 
 void izdrukat(elem* first){
-
+    if(first){
     for (elem* p = first; p != NULL; p=p->next){
-        cout << p->num << endl;
+        cout << p->num << ' ';
+    }
+    cout << endl;}
+    else{
+        cout << "ir tukšs!" << endl;
     }
 }
 
-void dzest(elem* &first){
-/// saraksta iznīcināšana
+void dzest(elem* &first){ // saraksta iznīcināšana
     elem* p = first;
     while (p!=NULL) {
         first = first->next;
@@ -57,30 +54,73 @@ void dzest(elem* &first){
 
 void izmestVienados(elem* &first){
     int kartasNr = 0;
-    for (elem* p = first; p != NULL; p=p->next){
-        if(kartasNr == p->num){
-            p->next = p->next->next;
-
+    while (first and first->num == kartasNr) { // Dzēšana, ja jādzēš virkens pirmais elements
+        elem *temp = first;
+        first=first->next;
+        delete temp;
+        temp = NULL;
+        kartasNr++;
+    }
+    if (first == NULL){
+        return;
+    }
+    elem *p=first;
+    kartasNr++;
+    elem *nakamais = p->next;
+    while (nakamais) {
+        while(nakamais and nakamais->num!= kartasNr) {
+            p=p->next;
+            nakamais=nakamais->next;
+            kartasNr++;
+        }
+        if (nakamais!=NULL) {
+            p->next = nakamais->next;
+            delete nakamais;
+            nakamais=p->next;
+            kartasNr++;
         }
     }
-
-
-
 }
 int main(){
-    elem *first=NULL, *last=NULL, *p;
-    int i;
-    cout << "Ievadiet skaitļu virknes elementu (0, ja gribat beigt): " << endl;
-    cin >> i;
-/// ievadīšana, kamēr nav sastapta 0
-    while (i != 0)
-    {
-        pievienot(first, last, i);
-        cout << "Ievadiet skaitļu virknes elementu (0, ja gribat beigt): " << endl;
-        cin >> i;
-    };
-    izdrukat(first);
+    int ok;
 
+    do{
+        elem *first=NULL, *last=NULL, *p;
+        int i;
+        cout << "Ievadiet skaitļu virknes elementu (-1, ja gribat beigt): " << endl;
+        cin >> i;
+
+        while (i != -1)// ievadīšana, kamēr nav sastapts -1
+        {
+            pievienot(first, last, i);
+            cout << "Ievadiet skaitļu virknes elementu (-1, ja gribat beigt): " << endl;
+            cin >> i;
+        }
+        cout << "Sākotnējais saraksts: ";
+        izdrukat(first);
+        izmestVienados(first);
+        cout << endl<< "Iegūtais saraksts: ";
+        izdrukat(first);
+        dzest(first);
+        cout << " Vai turpināt (1) vai beigt (0)?" << endl;
+
+        cin >> ok;
+
+    } while (ok == 1);
     return 0;
 }
+
+/*                                      TESTA PLĀNS
+ *
+ *            Ievade                        Sagaidītais rezultāts
+ *
+ *          0 1 2 3 4                           Tukšs saraksts!
+ *
+ *          1 1 2 3 4                               1
+ *
+ *          0 1 33 3 4 4                            33 4
+ *
+ *          2 4 6 9 11                              2 4 6 9 11
+ * */
+
 
