@@ -18,7 +18,13 @@ struct elem{
     int num;
     elem *next;
 };
-
+/*
+ * void pievienot(elem* &first, elem* &last, int el);
+ *  Funkcija pievienot(&first, &last, el)-
+ *  pievieno saistītā saraksta , kas norādīts ar first un last, beigās jaunu elementu ar vērtību el
+ *
+ *
+ * */
 void pievienot(elem* &first, elem* &last, int el){
     elem* p = new elem;
     p->num = el;
@@ -31,19 +37,27 @@ void pievienot(elem* &first, elem* &last, int el){
         last = p;
     }
 }
-
+/*
+ * void izdrukat(elem* first);
+ * Funkcija izdrukat(first)-
+ * izdrukā saistīto sarakstu uz kura sākumu norāda first.
+ * */
 void izdrukat(elem* first){
     if(first){
-    for (elem* p = first; p != NULL; p=p->next){
-        cout << p->num << ' ';
-    }
-    cout << endl;}
+        for (elem* p = first; p != NULL; p=p->next){
+            cout << p->num << ' ';
+        }
+        cout << endl;}
     else{
         cout << "ir tukšs!" << endl;
     }
 }
-
-void dzest(elem* &first){ // saraksta iznīcināšana
+/*
+ * void dzest(elem* &first);
+ * Funkcija dzest(&first)-
+ * Izdzēš saistīto sarakstu uz kuru norāda first.
+ * */
+void dzest(elem* &first){
     elem* p = first;
     while (p!=NULL) {
         first = first->next;
@@ -51,7 +65,11 @@ void dzest(elem* &first){ // saraksta iznīcināšana
         p = first;
     }}
 
-
+/* void izmestVienados(elem* &first);
+ * Funkcija izmestVienados(&first)-
+ *  no saistītā saraksta, uz kura sākumu norāda first izmet tos elementus,
+ *  kuru kārtas numurs ir vienāds ar elementā saglabāto vērtību
+ * */
 void izmestVienados(elem* &first){
     int kartasNr = 0;
     while (first and first->num == kartasNr) { // Dzēšana, ja jādzēš virkens pirmais elements
@@ -81,6 +99,8 @@ void izmestVienados(elem* &first){
         }
     }
 }
+
+
 int main(){
     int ok;
 
